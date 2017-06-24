@@ -70,10 +70,10 @@ public class PermissionManager {
             hasAllPermissions = true;
         }
 
-        return  hasAllPermissions;
+        return hasAllPermissions;
     }
 
-    public boolean hasStoragePermission() {
+    public boolean hasLocationPermission() {
         return (ContextCompat.checkSelfPermission(callerContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED);
     }
@@ -83,7 +83,7 @@ public class PermissionManager {
                 == PackageManager.PERMISSION_GRANTED);
     }
 
-    public boolean hasLocationPermission() {
+    public boolean hasStoragePermission() {
         return (ContextCompat.checkSelfPermission(callerContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED);
     }
