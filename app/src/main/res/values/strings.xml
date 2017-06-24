@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CoolMaps</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!--    Styling    -->
+    <string name="style_label_retro">Retro</string>
+    <string name="style_label_night">Night</string>
+
+</resources>
