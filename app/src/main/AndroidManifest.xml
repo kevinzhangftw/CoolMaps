@@ -45,6 +45,7 @@
         <activity android:name=".SplashActivity" />
         <activity android:name=".ParkListActivity" />
         <activity android:name=".SigninActivity"></activity>
+        <activity android:name=".onboarding.LocationPermissionActivity"></activity>
     </application>
 
 </manifest>
