@@ -3,7 +3,7 @@ package com.camvy.kai.coolmaps.Networking;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by kai on 2017-07-30.
+ * Created by kai on 20 17-07-30.
  *
  * This is for logging users into the server.
  */

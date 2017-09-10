@@ -48,8 +48,8 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void completion(boolean bool) {
                 if (bool){
-                    Intent parklistIntent = new Intent(getBaseContext(), ParkListActivity.class);
-                    startActivity(parklistIntent);
+                    Intent mapsIntent = new Intent(getBaseContext(), MapsActivity.class);
+                    startActivity(mapsIntent);
                 }else {
                     Intent signinIntent = new Intent(getBaseContext(), SigninActivity.class);
                     startActivity(signinIntent);

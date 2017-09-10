@@ -9,9 +9,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.camvy.kai.coolmaps.Networking.AuthCallback;
+import com.camvy.kai.coolmaps.Networking.Badge;
+import com.camvy.kai.coolmaps.Networking.BadgeCallback;
 import com.camvy.kai.coolmaps.Networking.Cred;
 import com.camvy.kai.coolmaps.Networking.LoginCred;
 import com.camvy.kai.coolmaps.Networking.PoxyServer;
+import com.camvy.kai.coolmaps.Networking.UserState;
 
 public class SigninActivity extends AppCompatActivity {
 
@@ -49,10 +52,11 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     private void signIn(){
-        AuthCallback ac = new AuthCallback() {
+        BadgeCallback    ac = new BadgeCallback() {
             @Override
-            public void completion(boolean success) {
+            public void completion(boolean success, Badge badge) {
                 if (success) {
+                    UserState.setBadge(badge, getApplicationContext());
                     Intent mapIntent = new Intent(getBaseContext(), MapsActivity.class);
                     startActivity(mapIntent);
                     finish();

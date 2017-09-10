@@ -2,7 +2,12 @@ package com.camvy.kai.coolmaps.Networking;
 
 import android.util.Log;
 
+import com.camvy.kai.coolmaps.Networking.UserState;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
+import android.content.Context;
+
+import junit.framework.Assert;
 
 import retrofit2.*;
 import retrofit2.Callback;
@@ -14,10 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class PoxyServer {
-    //testing on grok
     private static final String SERVER_URL = "http://4cd5f260.ngrok.io/";
-
-    //private static final String SERVER_URL = "https://poxy.localtunnel.me/";
 
     private static Retrofit getRetrofitConnection(){
         return (new Retrofit.Builder()
@@ -28,75 +30,76 @@ public class PoxyServer {
 
     public static void authenticate(Badge userbadge, final AuthCallback authCallBack){
         PoxyAPI poxyAPI = getRetrofitConnection().create(PoxyAPI.class);
-        Call<Badge> call = poxyAPI.authenticate(userbadge);
-
-        call.enqueue(new Callback<Badge>() {
+        Call<Badge> request = poxyAPI.authenticate(userbadge);
+        request.enqueue(new Callback<Badge>() {
             @Override
-            public void onResponse(Call<Badge> call, Response<Badge> response) {
+            public void onResponse(Call<Badge> request, Response<Badge> response) {
                 if (response.isSuccessful()){
                     authCallBack.completion(true);
-                    Log.d("Response Success", new Gson().toJson(response.body()));
-                }else {
+                } else {
                     authCallBack.completion(false);
                     Log.d("Response Err Code",new Gson().toJson(response));
                 }
             }
             @Override
-            public void onFailure(Call<Badge> call, Throwable t) {
+            public void onFailure(Call<Badge> request, Throwable t) {
                 authCallBack.completion(false);
+                Log.d("Response Err Code", "PoxyServer authenticate onFailure...");
+            }
+        });
+    }
+
+    public static void register(Cred userCred, final BadgeCallback badgeCallback){
+        PoxyAPI poxyAPI = getRetrofitConnection().create(PoxyAPI.class);
+        Call<Object> call = poxyAPI.register(userCred);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()){
+                    badgeCallback.completion(true, makeBadge(response));
+                    Log.d("Response Success", new Gson().toJson(response.body()));
+                }else{
+                    badgeCallback.completion(false, null);
+                    Log.d("Response Err Code",new Gson().toJson(response));
+                }
+            }
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                badgeCallback.completion(false, null);
                 Log.d("Response Err Code", "Cannot Reach Server");
             }
         });
     }
 
-    /**
-     * This is for registering users.  Ex: "PoxyServer.register".
-     * @param userCred      A example of a Cred.
-     * @param authCallback
-     */
-    public static void register(Cred userCred, final AuthCallback authCallback){
-        PoxyAPI poxyAPI = getRetrofitConnection().create(PoxyAPI.class);
-        Call<Cred> call = poxyAPI.register(userCred);
-        call.enqueue(new Callback<Cred>() {
-            @Override
-            public void onResponse(Call<Cred> call, Response<Cred> response) {
-                if (response.isSuccessful()){
-                    //TODO Save userid and session token
-                    authCallback.completion(true);
-                    Log.d("Response Success", new Gson().toJson(response.body()));
-                }else{
-                    authCallback.completion(false);
-                    Log.d("Response Err Code",new Gson().toJson(response));
-                }
-            }
+    private static Badge makeBadge(Response<Object> response) {
+        Assert.assertTrue(((LinkedTreeMap) response.body()).containsKey("user_id"));
+        Assert.assertTrue(((LinkedTreeMap) response.body()).containsKey("session_token"));
 
-            @Override
-            public void onFailure(Call<Cred> call, Throwable t) {
-                authCallback.completion(false);
-                Log.d("Response Err Code", "Cannot Reach Server");
-            }
-        });
+        LinkedTreeMap body = (LinkedTreeMap) response.body();
+        float user_id = ((Double) body.get("user_id")).floatValue();
+        String session_token = (String) body.get("session_token");
+        return new Badge(user_id, session_token);
+
     }
 
-    public static void login(LoginCred userLoginCred, final AuthCallback authCallback){
+    public static void login(LoginCred userLoginCred, final BadgeCallback badgeCallback){
         PoxyAPI poxyAPI = getRetrofitConnection().create(PoxyAPI.class);
-        Call<LoginCred> call = poxyAPI.login(userLoginCred);
-        call.enqueue(new Callback<LoginCred>() {
+        Call<Object> call = poxyAPI.login(userLoginCred);
+        call.enqueue(new Callback<Object>() {
             @Override
-            public void onResponse(Call<LoginCred> call, Response<LoginCred> response) {
+            public void onResponse(Call<Object> call, Response<Object> response) {
                 if (response.isSuccessful()){
-                    //TODO Save userid and session token
-                    authCallback.completion(true);
+                    badgeCallback.completion(true, makeBadge(response));
                     Log.d("Response Success", new Gson().toJson(response.body()));
                 }else{
-                    authCallback.completion(false);
+                    badgeCallback.completion(false, null);
                     Log.d("Response Err Code",new Gson().toJson(response));
                 }
             }
 
             @Override
-            public void onFailure(Call<LoginCred> call, Throwable t) {
-                authCallback.completion(false);
+            public void onFailure(Call<Object> call, Throwable t) {
+                badgeCallback.completion(false, null);
                 Log.d("Response Err Code", "Cannot Reach Server");
             }
         });
