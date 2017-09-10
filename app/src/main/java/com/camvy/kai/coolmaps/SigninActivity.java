@@ -24,7 +24,10 @@ public class SigninActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+        connectFormElements();
+    }
 
+    private void connectFormElements(){
         txtEmail = (EditText)findViewById(R.id.etEmail);
         txtPassword = (EditText)findViewById(R.id.etPassword);
 
@@ -40,52 +43,27 @@ public class SigninActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                AuthCallback ac = new AuthCallback() {
-                    @Override
-                    public void completion(boolean success) {
-                        if (success) {
-                            Intent mapIntent = new Intent(getBaseContext(), MapsActivity.class);
-                            startActivity(mapIntent);
-                            finish();
-                        }
-                    }
-                };
-
-                LoginCred userCred = new LoginCred(txtEmail.getText().toString(), txtPassword.getText().toString());
-                PoxyServer.login(userCred, ac);
+                signIn();
             }
         });
-        //DEBUG
-//        Cred fakeCred = new Cred("sam@uncle.com", "12345678", "12345678");
-//        PoxyServer.register(fakeCred, new AuthCallback() {
-//            @Override
-//            public void completion(boolean success) {
-//                if (success){
-//                    Toast.makeText(getBaseContext(), "Sign up Sucess! You can use the app", Toast.LENGTH_LONG).show();
-//                    Intent parklistIntent = new Intent(getBaseContext(), ParkListActivity.class);
-//                    startActivity(parklistIntent);
-//                }else {
-//                    //Display Why user cannot signup
-//                    Toast.makeText(getBaseContext(), "Sign up failed, please try again", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
+    }
 
-        //DEBUG login
-        LoginCred fakelogin = new LoginCred("sam@uncle.com", "12345678");
-        PoxyServer.login(fakelogin, new AuthCallback() {
+    private void signIn(){
+        AuthCallback ac = new AuthCallback() {
             @Override
             public void completion(boolean success) {
-                if (success){
-                    Toast.makeText(getBaseContext(), "You are logged in! You can use the app", Toast.LENGTH_LONG).show();
-                    Intent parklistIntent = new Intent(getBaseContext(), ParkListActivity.class);
-                    startActivity(parklistIntent);
-                }else{
-                    //Display Why user cannot signup
+                if (success) {
+                    Intent mapIntent = new Intent(getBaseContext(), MapsActivity.class);
+                    startActivity(mapIntent);
+                    finish();
+                }
+                else{
                     Toast.makeText(getBaseContext(), "Login failed, please try again", Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        };
+
+        LoginCred userCred = new LoginCred(txtEmail.getText().toString(), txtPassword.getText().toString());
+        PoxyServer.login(userCred, ac);
     }
 }
