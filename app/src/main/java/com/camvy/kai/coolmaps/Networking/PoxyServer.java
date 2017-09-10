@@ -14,7 +14,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class PoxyServer {
-    private static final String SERVER_URL = "https://poxy.localtunnel.me/";
+    //testing on grok
+    private static final String SERVER_URL = "http://4cd5f260.ngrok.io/";
+
+    //private static final String SERVER_URL = "https://poxy.localtunnel.me/";
 
     private static Retrofit getRetrofitConnection(){
         return (new Retrofit.Builder()
@@ -46,6 +49,11 @@ public class PoxyServer {
         });
     }
 
+    /**
+     * This is for registering users.  Ex: "PoxyServer.register".
+     * @param userCred      A example of a Cred.
+     * @param authCallback
+     */
     public static void register(Cred userCred, final AuthCallback authCallback){
         PoxyAPI poxyAPI = getRetrofitConnection().create(PoxyAPI.class);
         Call<Cred> call = poxyAPI.register(userCred);

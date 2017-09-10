@@ -4,7 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by kai on 2017-07-30.
+ *
+ * This class is for registering users on the server.
  */
+
 
 public class Cred {
     @SerializedName("email") private String email;

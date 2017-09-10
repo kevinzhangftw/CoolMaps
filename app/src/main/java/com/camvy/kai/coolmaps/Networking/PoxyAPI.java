@@ -11,14 +11,17 @@ import retrofit2.http.POST;
 
 public interface PoxyAPI {
 
+    //This is the call for when we already have a token and need to match it with the server
     @Headers("Accept: application/json")
     @POST("/authenticate")
     Call<Badge> authenticate(@Body Badge userBadge);
 
+    //This is the call for Registration
     @Headers("Accept: application/json")
     @POST("/users")
     Call<Cred> register(@Body Cred userCred);
 
+    //This is the call for Login
     @Headers("Accept: application/json")
     @POST("/login")
     Call<LoginCred> login(@Body LoginCred userLoginCred);

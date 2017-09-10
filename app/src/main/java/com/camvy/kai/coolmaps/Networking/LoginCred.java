@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by kai on 2017-07-30.
+ *
+ * This is for logging users into the server.
  */
 
 public class LoginCred {
